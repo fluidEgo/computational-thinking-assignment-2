@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computational Thinking Practice Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .sidebar-link {
+            transition: all 0.2s ease-in-out;
+        }
+        .sidebar-link.active {
+            background-color: #4f46e5;
+            color: white;
+            font-weight: 600;
+        }
+        .sidebar-link:not(.active):hover {
+            background-color: #eef2ff;
+            color: #312e81;
+        }
+        /* Custom styles for the sort visualizer */
+        .sort-bar {
+            background-color: #6366f1;
+            margin: 0 1px;
+            transition: height 0.3s ease, background-color 0.3s ease;
+            display: inline-block;
+        }
+        .sort-bar.comparing {
+            background-color: #f59e0b; /* Amber */
+        }
+        .sort-bar.sorted {
+            background-color: #22c55e; /* Green */
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-full md:w-64 bg-white border-r border-slate-200 p-4 md:p-6 flex-shrink-0">
+            <h1 class="text-2xl font-bold text-indigo-600 mb-6">CompThink Solver</h1>
+            <nav id="sidebar-nav" class="space-y-2">
+                <a href="#" data-target="pascal" class="sidebar-link active flex items-center p-3 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 00-1 1v1H8a1 1 0 00-1 1v2a1 1 0 001 1h1v1a1 1 0 102 0v-1h1a1 1 0 001-1V6a1 1 0 00-1-1h-1V4a1 1 0 00-1-1zM5 8a2 2 0 100-4 2 2 0 000 4zm10-2a2 2 0 11-4 0 2 2 0 014 0zM5 12a2 2 0 100 4 2 2 0 000-4zm10 2a2 2 0 11-4 0 2 2 0 014 0z" clip-rule="evenodd" /></svg>
+                    Pascal's Triangle
+                </a>
+                <a href="#" data-target="loan" class="sidebar-link flex items-center p-3 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" viewBox="0 0 20 20" fill="currentColor"><path d="M8.433 7.418c.158-.103.358-.168.567-.168h1.366c.361 0 .653.292.653.653v1.366c0 .209-.065.409-.168.567l-3.322 3.322a.653.653 0 01-.924 0l-1.366-1.366a.653.653 0 010-.924l3.322-3.322zM10 1.333a8.667 8.667 0 100 17.334 8.667 8.667 0 000-17.334z" /></svg>
+                    Loan Calculator
+                </a>
+                <a href="#" data-target="strong" class="sidebar-link flex items-center p-3 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" /></svg>
+                    Strong Number
+                </a>
+                <a href="#" data-target="sort" class="sidebar-link flex items-center p-3 rounded-lg">
+                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" viewBox="0 0 20 20" fill="currentColor"><path d="M5 12a1 1 0 102 0V6.414l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L5 6.414V12zM15 8a1 1 0 10-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z" /></svg>
+                    Sort Visualizer
+                </a>
+                <a href="#" data-target="phone" class="sidebar-link flex items-center p-3 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" viewBox="0 0 20 20" fill="currentColor"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" /></svg>
+                    Phone Combinations
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main id="main-content" class="flex-1 p-4 md:p-10">
+            <!-- Pascal's Triangle Section -->
+            <section id="pascal" class="page-section bg-white p-6 md:p-8 rounded-xl shadow-sm">
+                <h2 class="text-3xl font-bold mb-2">Left Pascal's Triangle</h2>
+                <p class="text-slate-600 mb-6">Enter a number to generate the corresponding left-aligned Pascal's triangle pattern.</p>
+                <div class="mb-4">
+                    <label for="pascal-n" class="block text-sm font-medium text-slate-700 mb-1">Number of rows (n):</label>
+                    <input type="number" id="pascal-n" class="w-full md:w-1/3 p-2 border border-slate-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" value="5">
+                </div>
+                <button id="generate-pascal" class="bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Generate</button>
+                <div class="mt-6">
+                    <h3 class="font-semibold text-lg mb-2">Result:</h3>
+                    <pre id="pascal-output" class="bg-slate-100 p-4 rounded-md overflow-x-auto text-sm"></pre>
+                </div>
+            </section>
+
+            <!-- Loan Calculator Section -->
+            <section id="loan" class="page-section hidden bg-white p-8 rounded-xl shadow-sm">
+                <h2 class="text-3xl font-bold mb-2">Simple Interest Loan Calculator</h2>
+                <p class="text-slate-600 mb-6">Calculate the monthly payment for a loan using a simple interest formula.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div>
+                        <label for="loan-amount" class="block text-sm font-medium text-slate-700">Loan Amount ($):</label>
+                        <input type="number" id="loan-amount" class="mt-1 w-full p-2 border border-slate-300 rounded-md" value="10000">
+                    </div>
+                    <div>
+                        <label for="interest-rate" class="block text-sm font-medium text-slate-700">Annual Interest Rate (%):</label>
+                        <input type="number" id="interest-rate" class="mt-1 w-full p-2 border border-slate-300 rounded-md" value="5">
+                    </div>
+                    <div>
+                        <label for="loan-years" class="block text-sm font-medium text-slate-700">Loan Term (Years):</label>
+                        <input type="number" id="loan-years" class="mt-1 w-full p-2 border border-slate-300 rounded-md" value="5">
+                    </div>
+                </div>
+                <button id="calculate-loan" class="bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-indigo-700">Calculate</button>
+                <div id="loan-output" class="mt-6 p-4 bg-indigo-50 border-l-4 border-indigo-500 rounded-md"></div>
+            </section>
+
+            <!-- Strong Number Section -->
+            <section id="strong" class="page-section hidden bg-white p-8 rounded-xl shadow-sm">
+                <h2 class="text-3xl font-bold mb-2">Strong Number Checker</h2>
+                <p class="text-slate-600 mb-6">A number is a "Strong Number" if the sum of the factorials of its digits is equal to the original number (e.g., 145 = 1! + 4! + 5!).</p>
+                <div class="mb-4">
+                    <label for="strong-number" class="block text-sm font-medium text-slate-700">Enter a number:</label>
+                    <input type="number" id="strong-number" class="mt-1 w-full md:w-1/3 p-2 border border-slate-300 rounded-md" value="145">
+                </div>
+                <button id="check-strong" class="bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-indigo-700">Check</button>
+                <div id="strong-output" class="mt-6 p-4 bg-slate-100 rounded-md"></div>
+            </section>
+
+            <!-- Sort Visualizer Section -->
+            <section id="sort" class="page-section hidden bg-white p-8 rounded-xl shadow-sm">
+                <h2 class="text-3xl font-bold mb-2">Sorting Algorithm Visualizer</h2>
+                <p class="text-slate-600 mb-6">See how Merge Sort and Selection Sort work step-by-step. The assignment asks to distinguish them, so this visualizer can help!</p>
+                <div class="flex flex-wrap gap-4 items-center mb-6">
+                    <button id="generate-array" class="border border-indigo-600 text-indigo-600 font-semibold py-2 px-4 rounded-md hover:bg-indigo-50">New Random Array</button>
+                    <select id="sort-algorithm" class="p-2 border border-slate-300 rounded-md">
+                        <option value="mergeSort">Merge Sort</option>
+                        <option value="selectionSort">Selection Sort</option>
+                    </select>
+                    <button id="sort-start" class="bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-indigo-700">Sort!</button>
+                </div>
+                <div id="sort-container" class="w-full h-64 bg-slate-100 rounded-md p-4 flex items-end justify-center"></div>
+                <div class="mt-6">
+                    <h3 class="font-semibold text-lg mb-2">Explanation:</h3>
+                    <div id="sort-explanation" class="text-slate-600 space-y-2"></div>
+                </div>
+            </section>
+
+            <!-- Phone Combinations Section -->
+            <section id="phone" class="page-section hidden bg-white p-8 rounded-xl shadow-sm">
+                <h2 class="text-3xl font-bold mb-2">Phone Letter Combinations</h2>
+                <p class="text-slate-600 mb-6">Given digits from 2-9, find all possible letter combinations they could represent, just like on a telephone keypad.</p>
+                <div class="mb-4">
+                    <label for="phone-digits" class="block text-sm font-medium text-slate-700">Enter digits (2-9):</label>
+                    <input type="text" id="phone-digits" class="mt-1 w-full md:w-1/3 p-2 border border-slate-300 rounded-md" value="23" maxlength="4">
+                </div>
+                <button id="generate-phone-combos" class="bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-indigo-700">Generate</button>
+                <div class="mt-6">
+                    <h3 class="font-semibold text-lg mb-2">Combinations:</h3>
+                    <div id="phone-output" class="p-4 bg-slate-100 rounded-md grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('.page-section');
+            const navLinks = document.querySelectorAll('#sidebar-nav a');
+
+            // --- Navigation ---
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.dataset.target;
+
+                    sections.forEach(section => {
+                        section.classList.add('hidden');
+                    });
+
+                    document.getElementById(targetId).classList.remove('hidden');
+
+                    navLinks.forEach(navLink => {
+                        navLink.classList.remove('active');
+                    });
+                    link.classList.add('active');
+                });
+            });
+            
+            // --- Initial Calls ---
+            generatePascalTriangle();
+            calculateLoanPayment();
+            checkStrongNumber();
+            setupSortVisualizer();
+            generatePhoneCombinations();
+
+            // --- Event Listeners ---
+            document.getElementById('generate-pascal').addEventListener('click', generatePascalTriangle);
+            document.getElementById('calculate-loan').addEventListener('click', calculateLoanPayment);
+            document.getElementById('check-strong').addEventListener('click', checkStrongNumber);
+            document.getElementById('generate-phone-combos').addEventListener('click', generatePhoneCombinations);
+
+            // --- 1. Pascal's Triangle ---
+            function generatePascalTriangle() {
+                const n = parseInt(document.getElementById('pascal-n').value) || 0;
+                const output = document.getElementById('pascal-output');
+                if (n <= 0 || n > 20) {
+                    output.textContent = "Please enter a number between 1 and 20.";
+                    return;
+                }
+
+                let result = '';
+                for (let i = 1; i <= n; i++) {
+                    let line = '';
+                    // Add padding for alignment
+                    result += ' '.repeat(n - i);
+                    let num = 1;
+                    for (let j = 1; j <= i; j++) {
+                        line += num + ' ';
+                        num = num * (i - j) / j;
+                    }
+                    result += line.trim() + '\n';
+                }
+                output.textContent = result;
+            }
+
+            // --- 2. Loan Calculator ---
+            function calculateLoanPayment() {
+                const amount = parseFloat(document.getElementById('loan-amount').value);
+                const rate = parseFloat(document.getElementById('interest-rate').value);
+                const years = parseFloat(document.getElementById('loan-years').value);
+                const output = document.getElementById('loan-output');
+
+                if (isNaN(amount) || isNaN(rate) || isNaN(years) || amount <= 0 || rate <= 0 || years <= 0) {
+                    output.innerHTML = `<p class="font-semibold text-red-700">Please enter valid positive numbers for all fields.</p>`;
+                    return;
+                }
+
+                const totalInterest = amount * (rate / 100) * years;
+                const totalRepayment = amount + totalInterest;
+                const monthlyPayment = totalRepayment / (years * 12);
+
+                let resultHTML = `<p class="font-semibold text-lg">Your monthly payment is: <span class="text-indigo-700">$${monthlyPayment.toFixed(2)}</span></p>`;
+                if (monthlyPayment > 1000) {
+                    resultHTML += `<p class="mt-2 font-semibold text-amber-700">Warning: Monthly payment exceeds $1,000.</p>`;
+                }
+                output.innerHTML = resultHTML;
+            }
+
+            // --- 3. Strong Number ---
+            function checkStrongNumber() {
+                const numStr = document.getElementById('strong-number').value;
+                const num = parseInt(numStr);
+                const output = document.getElementById('strong-output');
+
+                if (isNaN(num) || num < 0) {
+                    output.innerHTML = `<p class="text-red-700">Please enter a non-negative integer.</p>`;
+                    return;
+                }
+
+                const factorials = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880];
+                let sum = 0;
+                let calculationSteps = [];
+
+                for (let digit of numStr) {
+                    const d = parseInt(digit);
+                    sum += factorials[d];
+                    calculationSteps.push(`${d}!`);
+                }
+
+                let resultHTML = `<p>Calculation: ${calculationSteps.join(' + ')} = ${sum}</p>`;
+                if (sum === num) {
+                    resultHTML += `<p class="mt-2 font-bold text-green-700">${num} is a Strong Number!</p>`;
+                } else {
+                    resultHTML += `<p class="mt-2 font-bold text-red-700">${num} is not a Strong Number.</p>`;
+                }
+                output.innerHTML = resultHTML;
+            }
+
+            // --- 4. Sort Visualizer ---
+            function setupSortVisualizer() {
+                let array = [];
+                const sortContainer = document.getElementById('sort-container');
+                const explanationDiv = document.getElementById('sort-explanation');
+                let isSorting = false;
+
+                const explanations = {
+                    mergeSort: `
+                        <p><strong class="text-indigo-600">Merge Sort</strong> is a "divide and conquer" algorithm. It works by:</p>
+                        <ol class="list-decimal list-inside pl-4">
+                            <li>Recursively splitting the array in half until each sub-array has only one element (which is inherently sorted).</li>
+                            <li>Merging the sorted sub-arrays back together to produce a fully sorted array.</li>
+                        </ol>
+                        <p class="mt-2"><strong>Time Complexity:</strong> O(n log n) in all cases (best, average, worst), making it very consistent. <br> <strong>Space Complexity:</strong> O(n) because it requires extra space to merge the sub-arrays.</p>
+                    `,
+                    selectionSort: `
+                        <p><strong class="text-indigo-600">Selection Sort</strong> is a simple, in-place comparison sort. It works by:</p>
+                        <ol class="list-decimal list-inside pl-4">
+                            <li>Finding the smallest element in the unsorted part of the array.</li>
+                            <li>Swapping it with the first element of the unsorted part.</li>
+                            <li>Repeating this process for the remaining unsorted part until the entire array is sorted.</li>
+                        </ol>
+                        <p class="mt-2"><strong>Time Complexity:</strong> O(n²) in all cases. It's not efficient for large datasets. <br> <strong>Space Complexity:</strong> O(1) as it sorts in-place without significant extra memory.</p>
+                    `
+                };
+
+                function generateNewArray() {
+                    if (isSorting) return;
+                    array = [];
+                    for (let i = 0; i < 50; i++) {
+                        array.push(Math.floor(Math.random() * 95) + 5);
+                    }
+                    renderArray(array);
+                }
+
+                function renderArray(arr, comparing = [], sortedIndices = []) {
+                    sortContainer.innerHTML = '';
+                    arr.forEach((value, index) => {
+                        const bar = document.createElement('div');
+                        bar.className = 'sort-bar';
+                        bar.style.height = `${value}%`;
+                        bar.style.width = '1.5%';
+                        if (comparing.includes(index)) {
+                            bar.classList.add('comparing');
+                        } else if (sortedIndices.includes(index)) {
+                           bar.classList.add('sorted');
+                        }
+                        sortContainer.appendChild(bar);
+                    });
+                }
+                
+                async function animateSteps(steps) {
+                    isSorting = true;
+                    document.getElementById('sort-start').disabled = true;
+                    document.getElementById('generate-array').disabled = true;
+
+                    for(const step of steps) {
+                        renderArray(step.array, step.comparing, step.sorted);
+                        await new Promise(resolve => setTimeout(resolve, 50));
+                    }
+                    // Final render to show all green
+                    renderArray(array, [], Array.from({length: array.length}, (_, i) => i));
+
+                    isSorting = false;
+                    document.getElementById('sort-start').disabled = false;
+                    document.getElementById('generate-array').disabled = false;
+                }
+
+                function getMergeSortAnimations() {
+                    const animations = [];
+                    const auxArray = array.slice();
+                    mergeSortHelper(0, array.length - 1, auxArray, animations);
+                    return animations;
+                }
+
+                function mergeSortHelper(start, end, aux, animations) {
+                    if (start === end) return;
+                    const middle = Math.floor((start + end) / 2);
+                    mergeSortHelper(start, middle, array, animations);
+                    mergeSortHelper(middle + 1, end, array, animations);
+                    merge(start, middle, end, aux, animations);
+                }
+
+                function merge(start, middle, end, aux, animations) {
+                    let i = start;
+                    let j = middle + 1;
+                    let k = start;
+                    while (i <= middle && j <= end) {
+                        animations.push({ array: aux.slice(), comparing: [i, j], sorted: []});
+                        if (aux[i] <= aux[j]) {
+                            array[k++] = aux[i++];
+                        } else {
+                            array[k++] = aux[j++];
+                        }
+                    }
+                    while (i <= middle) array[k++] = aux[i++];
+                    while (j <= end) array[k++] = aux[j++];
+
+                    for (let l = start; l <= end; l++) {
+                        aux[l] = array[l];
+                    }
+                     animations.push({ array: aux.slice(), comparing: [], sorted: Array.from({length: end-start+1}, (_, idx) => start+idx)});
+                }
+                
+                function getSelectionSortAnimations() {
+                    const animations = [];
+                    const n = array.length;
+                    for (let i = 0; i < n - 1; i++) {
+                        let minIdx = i;
+                        for (let j = i + 1; j < n; j++) {
+                             animations.push({ array: array.slice(), comparing: [j, minIdx], sorted: Array.from({length: i}, (_, idx) => idx) });
+                            if (array[j] < array[minIdx]) {
+                                minIdx = j;
+                            }
+                        }
+                        if(minIdx !== i){
+                            [array[i], array[minIdx]] = [array[minIdx], array[i]];
+                        }
+                        animations.push({ array: array.slice(), comparing: [], sorted: Array.from({length: i+1}, (_, idx) => idx) });
+                    }
+                    return animations;
+                }
+
+                document.getElementById('sort-start').addEventListener('click', () => {
+                    if(isSorting) return;
+                    const algo = document.getElementById('sort-algorithm').value;
+                    const animations = algo === 'mergeSort' ? getMergeSortAnimations() : getSelectionSortAnimations();
+                    animateSteps(animations);
+                });
+                
+                document.getElementById('sort-algorithm').addEventListener('change', (e) => {
+                   explanationDiv.innerHTML = explanations[e.target.value];
+                });
+
+                document.getElementById('generate-array').addEventListener('click', generateNewArray);
+                generateNewArray();
+                explanationDiv.innerHTML = explanations['mergeSort'];
+            }
+            
+            // --- 5. Phone Combinations ---
+            function generatePhoneCombinations() {
+                const digits = document.getElementById('phone-digits').value;
+                const output = document.getElementById('phone-output');
+                output.innerHTML = '';
+                
+                if (!/^[2-9]*$/.test(digits)) {
+                    output.innerHTML = `<p class="col-span-full text-red-600">Please enter only digits from 2 to 9.</p>`;
+                    return;
+                }
+                if (digits.length === 0) {
+                     output.innerHTML = `<p class="col-span-full text-slate-500">No digits entered.</p>`;
+                    return;
+                }
+
+                const mapping = {
+                    '2': 'abc', '3': 'def', '4': 'ghi', '5': 'jkl',
+                    '6': 'mno', '7': 'pqrs', '8': 'tuv', '9': 'wxyz'
+                };
+                
+                const result = [];
+
+                function backtrack(index, currentCombination) {
+                    if (index === digits.length) {
+                        result.push(currentCombination);
+                        return;
+                    }
+                    
+                    const letters = mapping[digits[index]];
+                    for (const letter of letters) {
+                        backtrack(index + 1, currentCombination + letter);
+                    }
+                }
+                
+                backtrack(0, '');
+
+                result.forEach(combo => {
+                    const span = document.createElement('span');
+                    span.textContent = combo;
+                    span.className = 'text-center bg-indigo-100 text-indigo-800 p-2 rounded-md font-mono';
+                    output.appendChild(span);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
