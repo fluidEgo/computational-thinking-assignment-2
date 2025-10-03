@@ -1,1 +1,0 @@
-# computational-thinking-assignment-2
